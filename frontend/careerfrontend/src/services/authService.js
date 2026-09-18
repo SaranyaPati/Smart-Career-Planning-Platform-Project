@@ -1,21 +1,35 @@
 import API from "./api";
 
-// Register User
-export const registerUser = async (userData) => {
-  return await API.post("register/", userData);
-};
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+export const registerUser    = async (userData) => API.post("register/",       userData);
+export const loginUser       = async (userData) => API.post("login/",          userData);
+export const sendOTP         = async (data)     => API.post("send-otp/",       data);
+export const verifyOTP       = async (data)     => API.post("verify-otp/",     data);
+export const resetPassword   = async (data)     => API.post("reset-password/", data);
 
-// Login User
-export const loginUser = async (userData) => {
-  return await API.post("login/", userData);
-};
+// ─── Profile ──────────────────────────────────────────────────────────────────
+export const getProfile    = async ()            => API.get("profile/");
+export const updateProfile = async (profileData) => API.put("profile/update/", profileData);
 
-// Get Profile
-export const getProfile = async () => {
-  return await API.get("profile/");
-};
+// ─── Resumes ──────────────────────────────────────────────────────────────────
+export const getResumes      = async ()         => API.get("resumes/");
+export const getResumeStatus = async ()         => API.get("resumes/status/");
+export const uploadResume    = async (formData) =>
+  API.post("resumes/", formData, { headers: { "Content-Type": "multipart/form-data" } });
+export const deleteResume    = async (id)       => API.delete(`resumes/${id}/`);
+export const analyzeResume   = async (id)       => API.get(`resumes/${id}/analyze/`);
 
-// Update Profile
-export const updateProfile = async (profileData) => {
-  return await API.put("profile/update/", profileData);
-};
+// ─── Jobs ─────────────────────────────────────────────────────────────────────
+export const getJobs      = async (search = "") =>
+  API.get(`jobs/${search ? `?search=${encodeURIComponent(search)}` : ""}`);
+export const getSavedJobs = async ()            => API.get("jobs/saved/");
+export const saveJob      = async (id)          => API.post(`jobs/${id}/save/`);
+export const unsaveJob    = async (id)          => API.delete(`jobs/${id}/save/`);
+
+// Job Applications
+export const applyToJob       = async (id, data) => API.post(`jobs/${id}/apply/`, data);
+export const checkApplied     = async (id)        => API.get(`jobs/${id}/apply/`);
+export const getMyApplications = async ()         => API.get("jobs/applications/");
+
+// ─── Careers ──────────────────────────────────────────────────────────────────
+export const getCareerPlan = async () => API.get("careers/plan/");

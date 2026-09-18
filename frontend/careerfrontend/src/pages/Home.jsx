@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import HeroSection from "../components/HeroSection";
 import FeatureCard from "../components/FeatureCard";
-import StatCard from "../components/StatCard";
 import Footer from "../components/Footer";
 
 function HomeNavbar() {
@@ -28,11 +27,11 @@ function HomeNavbar() {
 
           {/* Desktop links */}
           <div className="hidden md:flex items-center gap-3">
+          <a href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="text-sm font-semibold text-slate-400 hover:text-white transition px-3 py-2 rounded-xl hover:bg-slate-800">
+              Home
+            </a>
             <a href="#features" className="text-sm font-semibold text-slate-400 hover:text-white transition px-3 py-2 rounded-xl hover:bg-slate-800">
               Features
-            </a>
-            <a href="#stats" className="text-sm font-semibold text-slate-400 hover:text-white transition px-3 py-2 rounded-xl hover:bg-slate-800">
-              Stats
             </a>
             <Link to="/login" className="text-sm font-semibold text-slate-300 hover:text-white px-4 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 transition">
               Login
@@ -60,8 +59,8 @@ function HomeNavbar() {
       {/* Mobile menu */}
       <div className={`md:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"}`}>
         <div className="px-4 pb-4 pt-2 space-y-2 border-t border-slate-800 bg-slate-900">
+          <a href="#top" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); setMenuOpen(false); }} className="block text-sm font-semibold text-slate-400 hover:text-white px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">Home</a>
           <a href="#features" onClick={() => setMenuOpen(false)} className="block text-sm font-semibold text-slate-400 hover:text-white px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">Features</a>
-          <a href="#stats" onClick={() => setMenuOpen(false)} className="block text-sm font-semibold text-slate-400 hover:text-white px-4 py-2.5 rounded-xl hover:bg-slate-800 transition">Stats</a>
           <Link to="/login" className="block text-sm font-semibold text-slate-300 px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-center transition">Login</Link>
           <Link to="/register" className="block text-sm font-semibold text-white px-4 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-center transition">Get Started</Link>
         </div>
@@ -80,39 +79,21 @@ function Home() {
       {/* Features Section */}
       <main className="flex-grow max-w-7xl mx-auto px-6 py-16 w-full">
         <div id="features" className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 mb-4 text-sm font-semibold rounded-full bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40">
-            Everything You Need
-          </span>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
-            Powerful Career Tools
+            What We Offer
           </h2>
           <p className="text-slate-500 dark:text-slate-400 max-w-xl mx-auto text-sm leading-relaxed">
-            Our platform gives you all the tools to plan, build, and launch your career with confidence.
+            Smart tools to help you analyse your resume, explore career paths, and track your growth — all in one place.
           </p>
         </div>
 
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
-          <FeatureCard icon="📄" title="Resume Management"    description="Upload and manage resumes efficiently with AI-powered feedback." />
+          <FeatureCard icon="📄" title="Resume Analysis"      description="Upload and manage resumes efficiently with AI-powered feedback." />
           <FeatureCard icon="🎯" title="Career Suggestions"  description="Discover suitable career paths based on your skills and interests." />
-          <FeatureCard icon="📈" title="Skill Gap Analysis"  description="Identify skills required for your next career growth milestone." />
-          <FeatureCard icon="💼" title="Job Matching"        description="Get matched with real job openings tailored to your profile." />
-          <FeatureCard icon="🧠" title="AI Career Coach"     description="Personalised guidance powered by AI to help you reach your goals." />
-          <FeatureCard icon="📊" title="Progress Tracking"   description="Visualise and track your career progress over time." />
+          <FeatureCard icon="📈" title="Skill Tracking"      description="Identify skills required for your next career growth milestone." />
         </section>
 
-        {/* Stats Section */}
-        <div id="stats" className="text-center mb-12">
-          <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-3">
-            Trusted by Thousands
-          </h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm">Join a growing community of students and professionals.</p>
-        </div>
 
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-24">
-          <StatCard number="1,000+" title="Students Enrolled" />
-          <StatCard number="500+"   title="Career Paths"      />
-          <StatCard number="95%"    title="Success Rate"      />
-        </section>
 
         {/* CTA Banner */}
         <section className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl p-10 text-center text-white shadow-xl shadow-purple-900/20">

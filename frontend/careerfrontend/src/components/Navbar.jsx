@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
+import { getProfile } from "../services/authService";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [username, setUsername] = useState("");
+
+  // Fetch logged-in user's name
+  useEffect(() => {
+    getProfile()
+      .then((res) => setUsername(res.data.fullName || res.data.email || "User"))
+      .catch(() => setUsername("User"));
+  }, []);
 
   // Add shadow on scroll
   useEffect(() => {
@@ -27,6 +36,9 @@ function Navbar() {
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: "📊" },
     { to: "/profile",   label: "Profile",   icon: "👤" },
+    { to: "/resume",    label: "Resume",    icon: "📄" },
+    { to: "/jobs",      label: "Jobs",      icon: "💼" },
+    { to: "/careers",   label: "Careers",   icon: "🎯" },
   ];
 
   const linkClass = ({ isActive }) =>
@@ -69,9 +81,9 @@ function Navbar() {
             {/* User Badge */}
             <div className="flex items-center gap-2 bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl">
               <div className="w-6 h-6 rounded-full bg-purple-600 flex items-center justify-center text-xs font-bold text-white">
-                J
+                {username.charAt(0).toUpperCase() || "U"}
               </div>
-              <span className="text-sm font-semibold text-slate-300">Joe</span>
+              <span className="text-sm font-semibold text-slate-300">{username || "User"}</span>
             </div>
 
             {/* Logout */}
@@ -130,9 +142,9 @@ function Navbar() {
           <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-sm font-bold text-white">
-                J
+                {username.charAt(0).toUpperCase() || "U"}
               </div>
-              <span className="text-sm font-semibold text-slate-300">Joe</span>
+              <span className="text-sm font-semibold text-slate-300">{username || "User"}</span>
             </div>
             <button
               onClick={handleLogout}

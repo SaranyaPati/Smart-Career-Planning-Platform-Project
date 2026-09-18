@@ -24,25 +24,18 @@ function Login() {
     setLoading(true);
 
     try {
-      // Attempt to authenticate with the backend
       const response = await loginUser(formData);
+      // Store only the real access token from the backend
       localStorage.setItem("token", response.data.access);
+      localStorage.setItem("refresh_token", response.data.refresh);
       navigate("/dashboard");
     } catch (err) {
-      console.warn("Backend API not connected yet. Logging into Sandbox Mode instead.");
-
-      // Generate a valid mock JWT token for testing the frontend offline/sandbox
-      const payload = {
-        exp: Math.floor(Date.now() / 1000) + 86400, // Expires in 24 hours
-        username: formData.username || "joe",
-        sandbox: true
-      };
-
-      // Format: header.payload.signature
-      const mockToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." + btoa(JSON.stringify(payload)) + ".sandbox_signature";
-
-      localStorage.setItem("token", mockToken);
-      navigate("/dashboard");
+      // Show the real error — never fall back to a fake token
+      const msg =
+        err?.response?.data?.detail ||
+        err?.response?.data?.non_field_errors?.[0] ||
+        "Login failed. Please check your username and password.";
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -54,9 +47,6 @@ function Login() {
         <div className="text-center mb-8">
           <h2 className="text-3xl font-extrabold text-slate-950 dark:text-white mb-2">Welcome Back</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400">Login to plan your career path</p>
-          <div className="inline-block mt-3 px-3 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 border border-purple-100 dark:border-purple-800/40 rounded-lg text-xs font-semibold">
-            ⚡ Sandbox Fallback Enabled (Use any credentials)
-          </div>
         </div>
 
         {error && (
@@ -84,8 +74,8 @@ function Login() {
 
           <div>
             <label htmlFor="password" className="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">
-              Password
-            </label>
+                Password
+              </label>
             <input
               type="password"
               id="password"
@@ -107,11 +97,14 @@ function Login() {
           </button>
         </form>
 
+
         <div className="text-center mt-6 text-sm text-slate-500 dark:text-slate-400">
-          Don't have an account?{" "}
-          <Link to="/register" className="font-bold text-purple-600 dark:text-purple-400 hover:underline">
-            Register
-          </Link>
+          <p>
+            Don't have an account?{" "}
+            <Link to="/register" className="font-bold text-purple-600 dark:text-purple-400 hover:underline">
+              Register
+            </Link>
+          </p>
         </div>
       </div>
     </div>

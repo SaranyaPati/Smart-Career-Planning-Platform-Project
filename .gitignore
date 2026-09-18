@@ -1,0 +1,46 @@
+# ── Python / Django ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Django
+*.log
+*.pot
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# Environment
+.env
+.env.*
+*.env
+venv/
+env/
+ENV/
+.venv/
+
+# ── Node / React / Vite ──────────────────────────────────────────────────────
+node_modules/
+dist/
+.dist/
+.vite/
+*.local
+
+# ── OS / IDE ─────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

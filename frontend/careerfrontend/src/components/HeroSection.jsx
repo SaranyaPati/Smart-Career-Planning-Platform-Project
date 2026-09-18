@@ -34,13 +34,13 @@ function HeroSection() {
       </div>
 
       <div className="flex-1 relative w-full h-[320px] lg:h-[400px] flex items-center justify-center">
-        <div className="absolute top-[10%] left-[10%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2 animate-float">
+        <div className="absolute top-[10%] left-[10%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2">
           📄 Resume Analysis
         </div>
-        <div className="absolute top-[40%] right-[10%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2 animate-float-delayed-1">
+        <div className="absolute top-[40%] right-[10%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2">
           🎯 Career Suggestions
         </div>
-        <div className="absolute bottom-[10%] left-[20%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2 animate-float-delayed-2">
+        <div className="absolute bottom-[10%] left-[20%] bg-white/90 dark:bg-slate-900/90 backdrop-blur border border-slate-200 dark:border-slate-800 px-6 py-4 rounded-2xl shadow-xl font-semibold text-slate-800 dark:text-white flex items-center gap-2">
           📈 Skill Tracking
         </div>
       </div>
