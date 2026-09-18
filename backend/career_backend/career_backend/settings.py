@@ -1,10 +1,12 @@
 """
 Django settings for career_backend project.
+Supports both local development (MySQL) and production (PostgreSQL on Render).
 """
 
 from pathlib import Path
 from datetime import timedelta
 import os
+import dj_database_url
 
 # ---------------------------------------------------------------------------
 # Base directory
@@ -15,11 +17,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ---------------------------------------------------------------------------
 # Security
 # ---------------------------------------------------------------------------
-SECRET_KEY = 'django-insecure-p^9i^+epcy9&e&q=0!-%vk$%#bd2qy)0$5iy@uscow1d@y^4z^'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-p^9i^+epcy9&e&q=0!-%vk$%#bd2qy)0$5iy@uscow1d@y^4z^')
 
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Add Render host and any custom domains from env
+_render_host = os.environ.get('ALLOWED_HOSTS', '')
+if _render_host:
+    ALLOWED_HOSTS += [h.strip() for h in _render_host.split(',') if h.strip()]
 
 
 # ---------------------------------------------------------------------------
@@ -52,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # ← WhiteNoise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -83,18 +91,31 @@ WSGI_APPLICATION = 'career_backend.wsgi.application'
 
 
 # ---------------------------------------------------------------------------
-# Database — MySQL
+# Database
 # ---------------------------------------------------------------------------
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'career_platform',
-        'USER': 'root',
-        'PASSWORD': 'saranya4591',
-        'HOST': 'localhost',
-        'PORT': '3306',
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+
+if DATABASE_URL:
+    # Production: PostgreSQL on Render (via DATABASE_URL env var)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Local development: MySQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'career_platform',
+            'USER': 'root',
+            'PASSWORD': 'saranya4591',
+            'HOST': 'localhost',
+            'PORT': '3306',
+        }
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -121,6 +142,8 @@ USE_TZ = True
 # Static & Media files
 # ---------------------------------------------------------------------------
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -129,11 +152,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ---------------------------------------------------------------------------
-# CORS — allow React dev server
+# CORS
 # ---------------------------------------------------------------------------
-CORS_ALLOW_ALL_ORIGINS = True          # fine for development
-# In production replace with:
-# CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS', '')
+if _cors_origins:
+    CORS_ALLOWED_ORIGINS = [o.strip() for o in _cors_origins.split(',') if o.strip()]
+    CORS_ALLOWED_ORIGINS += ['http://localhost:5173', 'http://127.0.0.1:5173']
+else:
+    CORS_ALLOW_ALL_ORIGINS = True   # local dev only
 
 
 # ---------------------------------------------------------------------------
@@ -153,9 +179,9 @@ REST_FRAMEWORK = {
 # Simple JWT settings
 # ---------------------------------------------------------------------------
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=24),   # matches frontend 24-h exp
+    'ACCESS_TOKEN_LIFETIME':  timedelta(hours=24),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
-    'AUTH_HEADER_TYPES': ('Bearer',),                # frontend sends "Bearer <token>"
+    'AUTH_HEADER_TYPES': ('Bearer',),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
 }
@@ -164,16 +190,10 @@ SIMPLE_JWT = {
 # ---------------------------------------------------------------------------
 # Email — Gmail SMTP (used for OTP delivery)
 # ---------------------------------------------------------------------------
-# To create a Gmail App Password:
-#   1. Go to myaccount.google.com → Security → 2-Step Verification (enable it)
-#   2. Then go to Security → App passwords → create one for "Mail"
-#   3. Paste the 16-character password into EMAIL_HOST_PASSWORD below
-# ---------------------------------------------------------------------------
-
 EMAIL_BACKEND        = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST           = 'smtp.gmail.com'
 EMAIL_PORT           = 587
 EMAIL_USE_TLS        = True
-EMAIL_HOST_USER      = 'patisaranya@gmail.com'   # ← your Gmail address
-EMAIL_HOST_PASSWORD  = 'PASTE_YOUR_16_CHAR_APP_PASSWORD_HERE'   # ← Gmail App Password
+EMAIL_HOST_USER      = os.environ.get('EMAIL_HOST_USER', 'patisaranya@gmail.com')
+EMAIL_HOST_PASSWORD  = os.environ.get('EMAIL_HOST_PASSWORD', 'PASTE_YOUR_16_CHAR_APP_PASSWORD_HERE')
 DEFAULT_FROM_EMAIL   = EMAIL_HOST_USER

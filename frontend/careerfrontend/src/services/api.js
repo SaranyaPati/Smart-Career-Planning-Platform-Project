@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://127.0.0.1:8000/api/",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/",
 });
 
 // ── Attach access token to every request ──────────────────────────────────────
@@ -70,7 +70,7 @@ API.interceptors.response.use(
 
       try {
         const { data } = await axios.post(
-          "http://127.0.0.1:8000/api/token/refresh/",
+          `${import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api/"}token/refresh/`,
           { refresh: refreshToken }
         );
         const newAccess = data.access;

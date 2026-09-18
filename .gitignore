@@ -18,10 +18,11 @@ db.sqlite3
 db.sqlite3-journal
 media/
 
-# Environment
+# Environment — keep secrets out of git
 .env
-.env.*
-*.env
+.env.local
+.env.*.local
+# .env.production and .env.example are safe to commit (no secrets)
 venv/
 env/
 ENV/
